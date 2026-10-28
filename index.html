@@ -422,12 +422,11 @@
                 }
 
                 archivos.forEach(archivo => {
-                    // Remueve la extensión (.jpg, .JPG, .png) para que en el menú se lea limpio el nombre del alumno
                     let nombreLimpio = archivo.replace(/\.[^/.]+$/, ""); 
 
                     const option = document.createElement('option');
-                    // Asocia la ruta exacta respetando el nombre completo del archivo de imagen
-                    option.value = `fotos/${claveCarpeta}/${archivo}`;
+                    // Apunta directo a la carpeta del grupo (ej: 1A/FRENTE_...)
+                    option.value = `${claveCarpeta}/${archivo}`;
                     option.textContent = nombreLimpio;
                     alumnoSelect.appendChild(option);
                 });
