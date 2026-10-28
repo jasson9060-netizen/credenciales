@@ -304,15 +304,15 @@
             </select>
         </div>
 
-        <!-- 2. Selección de Grupo (Doble letra para coincidir con AA, BB, CC, DD) -->
+        <!-- 2. Selección de Grupo (Una sola letra para coincidir con 1A, 1B, etc.) -->
         <div class="form-group">
             <label for="grupoSelect">Grupo:</label>
             <select id="grupoSelect" onchange="cargarAlumnos()" disabled>
                 <option value="">-- Primero elija el grado --</option>
-                <option value="AA">Grupo A</option>
-                <option value="BB">Grupo B</option>
-                <option value="CC">Grupo C</option>
-                <option value="DD">Grupo D</option>
+                <option value="A">Grupo A</option>
+                <option value="B">Grupo B</option>
+                <option value="C">Grupo C</option>
+                <option value="D">Grupo D</option>
             </select>
         </div>
 
@@ -397,7 +397,7 @@
 
         function cargarAlumnos() {
             const grado = document.getElementById('gradoSelect').value;
-            const grupoLetra = document.getElementById('grupoSelect').value; // Esto tomará "AA", "BB", etc.
+            const grupoLetra = document.getElementById('grupoSelect').value; // Esto tomará "A", "B", "C", "D"
             const alumnoSelect = document.getElementById('alumnoSelect');
             const contenedor = document.getElementById('contenedorResultado');
             
@@ -409,7 +409,7 @@
                 return;
             }
 
-            const claveCarpeta = grado + grupoLetra; // Ej: 1AA, 2BB, etc.
+            const claveCarpeta = grado + grupoLetra; // Ej: 1A, 2B, etc.
             alumnoSelect.disabled = false;
 
             if (typeof baseDatosAlumnos !== 'undefined' && baseDatosAlumnos[claveCarpeta]) {
@@ -425,7 +425,7 @@
                     let nombreLimpio = archivo.replace(/\.[^/.]+$/, ""); 
 
                     const option = document.createElement('option');
-                    // Apunta directo a la carpeta doble (ej: 1AA/FRENTE_...)
+                    // Apunta directo a la carpeta (ej: 1A/FRENTE_...)
                     option.value = `${claveCarpeta}/${archivo}`;
                     option.textContent = nombreLimpio;
                     alumnoSelect.appendChild(option);
