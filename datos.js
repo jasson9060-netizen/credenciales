@@ -1,5 +1,4 @@
 const baseDatosAlumnos = {
-   const baseDatosAlumnos = {
     "1AA": [
         "FRENTE_ALBARRAN MONTAÑO SALLY CAROLINA.jpg"
     ],
