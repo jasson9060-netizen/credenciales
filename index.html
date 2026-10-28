@@ -5,15 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visor de Credenciales - Studio Vivencia</title>
     
-    <!-- LOGOTIPO Y MINIATURA PARA WHATSAPP / REDES SOCIALES -->
+    <!-- Favicon para la pestaña del navegador -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <!-- Vista previa para WhatsApp y Redes Sociales -->
+    <meta property="og:type" content="website">
     <meta property="og:title" content="Visor de Credenciales - Studio Vivencia">
     <meta property="og:description" content="Sistema seguro de verificación de credenciales escolares.">
     <meta property="og:image" content="https://credenciales.studiovivencia.com/logo.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
     <meta property="og:url" content="https://credenciales.studiovivencia.com/">
-    <meta property="og:type" content="website">
-
-    <!-- Logotipo en la pestaña del navegador (Favicon) -->
-    <link rel="icon" type="image/png" href="logo.png">
     
     <style>
         * { 
@@ -434,7 +438,7 @@
                     let nombreLimpio = archivo.replace(/\.[^/.]+$/, ""); 
 
                     const option = document.createElement('option');
-                    // Apunta a la carpeta doble (ej: 1AA/FRENTE_...)
+                    // Ruta correcta apuntando a fotos/
                     option.value = `fotos/${claveCarpeta}/${archivo}`;
                     option.textContent = nombreLimpio;
                     alumnoSelect.appendChild(option);
