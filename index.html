@@ -438,8 +438,8 @@
                     let nombreLimpio = archivo.replace(/\.[^/.]+$/, ""); 
 
                     const option = document.createElement('option');
-                    // Ruta correcta apuntando a fotos/
-                    option.value = `fotos/${claveCarpeta}/${archivo}`;
+                    // Ruta limpia original para carpetas de alumnos (ej: 1AA/foto.jpg)
+                    option.value = `${claveCarpeta}/${archivo}`;
                     option.textContent = nombreLimpio;
                     alumnoSelect.appendChild(option);
                 });
