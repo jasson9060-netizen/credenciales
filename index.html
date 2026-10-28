@@ -78,7 +78,7 @@
 
         .auth-input {
             width: 100%;
-            padding: 14px 48px 14px 16px; /* Espacio a la derecha para el botón del ojito */
+            padding: 14px 48px 14px 16px;
             font-size: 16px;
             border: 2px solid #e2e8f0;
             border-radius: 10px;
@@ -422,9 +422,11 @@
                 }
 
                 archivos.forEach(archivo => {
+                    // Remueve la extensión (.jpg, .JPG, .png) para que en el menú se lea limpio el nombre del alumno
                     let nombreLimpio = archivo.replace(/\.[^/.]+$/, ""); 
 
                     const option = document.createElement('option');
+                    // Asocia la ruta exacta respetando el nombre completo del archivo de imagen
                     option.value = `fotos/${claveCarpeta}/${archivo}`;
                     option.textContent = nombreLimpio;
                     alumnoSelect.appendChild(option);
