@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visor de Credenciales - Studio Vivencia</title>
+    <!-- Logotipo en la pestaña del navegador (Favicon) -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #334155; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+        }
+
+        /* Pantalla de Bloqueo por Contraseña */
+        #auth-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.4s ease;
+        }
+
+        .auth-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 420px;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .auth-card h2 {
+            color: #0f172a;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .auth-card p {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        /* Contenedor del campo con ojito */
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 14px 48px 14px 16px; /* Espacio a la derecha para el botón del ojito */
+            font-size: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            outline: none;
+            text-align: center;
+            letter-spacing: 2px;
+            transition: border-color 0.2s;
+        }
+
+        .auth-input:focus {
+            border-color: #2563eb;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #64748b;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-password:hover {
+            color: #2563eb;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .auth-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .error-msg {
+            color: #dc2626;
+            font-size: 13px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        /* Tarjeta Principal del Sistema */
+        .card { 
+            background: #ffffff; 
+            width: 100%; 
+            max-width: 500px; 
+            padding: 35px; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); 
+            text-align: center; 
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .logo-title { 
+            color: #0f172a; 
+            font-size: 24px; 
+            font-weight: 700; 
+        }
+
+        .subtitle { 
+            color: #2563eb; 
+            font-size: 12px; 
+            font-weight: 700; 
+            letter-spacing: 2px; 
+            text-transform: uppercase; 
+            margin-bottom: 28px; 
+        }
+
+        .form-group { 
+            text-align: left; 
+            margin-bottom: 18px; 
+        }
+
+        label { 
+            font-size: 13px; 
+            font-weight: 600; 
+            color: #475569; 
+            display: block; 
+            margin-bottom: 6px; 
+        }
+
+        select { 
+            width: 100%; 
+            padding: 12px 16px; 
+            font-size: 15px; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 10px; 
+            background-color: #f8fafc; 
+            color: #1e293b; 
+            outline: none; 
+            transition: all 0.2s; 
+        }
+
+        select:focus { 
+            border-color: #2563eb; 
+            background-color: #fff;
+        }
+
+        select:disabled { 
+            background-color: #f1f5f9; 
+            color: #94a3b8; 
+            cursor: not-allowed; 
+        }
+
+        .viewer { 
+            margin-top: 28px; 
+            padding-top: 22px; 
+            border-top: 2px solid #f1f5f9; 
+            min-height: 240px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+        }
+
+        .placeholder { 
+            color: #94a3b8; 
+            font-size: 14px; 
+            font-style: italic; 
+        }
+
+        .image-shield-container {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .image-shield-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0);
+        }
+
+        .credencial-img { 
+            max-width: 100%; 
+            height: auto; 
+            display: block;
+            border-radius: 12px;
+            pointer-events: none; 
+        }
+
+        @media print {
+            body { display: none !important; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <!-- PANTALLA DE ACCESO CON CONTRASEÑA -->
+    <div id="auth-screen">
+        <div class="auth-card">
+            <h2>Studio Vivencia</h2>
+            <p>Ingresa la contraseña que Studio Vivencia te proporcionó</p>
+            
+            <div class="password-wrapper">
+                <input type="password" id="passwordInput" class="auth-input" placeholder="Contraseña" autofocus onkeydown="if(event.key === 'Enter') verificarPassword()">
+                <button type="button" class="toggle-password" onclick="togglePasswordVisibility()" title="Mostrar/Ocultar contraseña">
+                    👁️
+                </button>
+            </div>
+
+            <button class="auth-btn" onclick="verificarPassword()">Ingresar al Sistema</button>
+            <div id="errorMsg" class="error-msg">Contraseña incorrecta. Intente de nuevo.</div>
+        </div>
+    </div>
+
+    <!-- TARJETA PRINCIPAL -->
+    <div class="card">
+        <div class="brand-header">
+            <img src="logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
+            <div class="logo-title">Studio Vivencia</div>
+        </div>
+        <div class="subtitle">Verificación de Credenciales</div>
+
+        <!-- 1. Selección de Grado -->
+        <div class="form-group">
+            <label for="gradoSelect">Grado Escolar:</label>
+            <select id="gradoSelect" onchange="alCambiarGrado()">
+                <option value="">-- Seleccionar Grado --</option>
+                <option value="1">1° de Primaria</option>
+                <option value="2">2° de Primaria</option>
+                <option value="3">3° de Primaria</option>
+                <option value="4">4° de Primaria</option>
+                <option value="5">5° de Primaria</option>
+                <option value="6">6° de Primaria</option>
+            </select>
+        </div>
+
+        <!-- 2. Selección de Grupo -->
+        <div class="form-group">
+            <label for="grupoSelect">Grupo:</label>
+            <select id="grupoSelect" onchange="cargarAlumnos()" disabled>
+                <option value="">-- Primero elija el grado --</option>
+                <option value="A">Grupo A</option>
+                <option value="B">Grupo B</option>
+                <option value="C">Grupo C</option>
+                <option value="D">Grupo D</option>
+            </select>
+        </div>
+
+        <!-- 3. Selección de Alumno -->
+        <div class="form-group">
+            <label for="alumnoSelect">Alumno:</label>
+            <select id="alumnoSelect" onchange="mostrarCredencial()" disabled>
+                <option value="">-- Primero elija el grupo --</option>
+            </select>
+        </div>
+
+        <!-- Vista de la Imagen Protegida -->
+        <div class="viewer" id="contenedorResultado">
+            <p class="placeholder">Selecciona el grado, grupo y alumno para visualizar su credencial.</p>
+        </div>
+    </div>
+
+    <!-- Archivo de datos generado automáticamente -->
+    <script src="datos.js"></script>
+
+    <script>
+        // Función para alternar ver/ocultar contraseña con el ojito
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('passwordInput');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+            } else {
+                passInput.type = 'password';
+            }
+        }
+
+        // Sistema de validación de contraseña
+        function verificarPassword() {
+            const pass = document.getElementById('passwordInput').value;
+            const errorMsg = document.getElementById('errorMsg');
+            const authScreen = document.getElementById('auth-screen');
+
+            if (pass === "jm2026") {
+                authScreen.style.opacity = '0';
+                setTimeout(() => {
+                    authScreen.style.display = 'none';
+                }, 400);
+            } else {
+                errorMsg.style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            }
+        }
+
+        // Bloqueo de teclas de inspección y atajos
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.keyCode === 123 || 
+                (e.ctrlKey && e.shiftKey && e.keyCode === 73) || 
+                (e.ctrlKey && e.shiftKey && e.keyCode === 74) || 
+                (e.ctrlKey && e.keyCode === 85) || 
+                (e.ctrlKey && e.keyCode === 83) || 
+                (e.ctrlKey && e.keyCode === 80)    
+            ) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        function alCambiarGrado() {
+            const grado = document.getElementById('gradoSelect').value;
+            const grupoSelect = document.getElementById('grupoSelect');
+            const alumnoSelect = document.getElementById('alumnoSelect');
+            
+            grupoSelect.value = "";
+            alumnoSelect.value = "";
+            alumnoSelect.innerHTML = '<option value="">-- Primero elija el grupo --</option>';
+            alumnoSelect.disabled = true;
+            document.getElementById('contenedorResultado').innerHTML = '<p class="placeholder">Selecciona el grado, grupo y alumno para visualizar su credencial.</p>';
+
+            if (grado === "") {
+                grupoSelect.disabled = true;
+            } else {
+                grupoSelect.disabled = false;
+            }
+        }
+
+        function cargarAlumnos() {
+            const grado = document.getElementById('gradoSelect').value;
+            const grupoLetra = document.getElementById('grupoSelect').value;
+            const alumnoSelect = document.getElementById('alumnoSelect');
+            const contenedor = document.getElementById('contenedorResultado');
+            
+            contenedor.innerHTML = '<p class="placeholder">Selecciona el grado, grupo y alumno para visualizar su credencial.</p>';
+            alumnoSelect.innerHTML = '<option value="">-- Seleccionar Alumno --</option>';
+
+            if (grupoLetra === "") {
+                alumnoSelect.disabled = true;
+                return;
+            }
+
+            const claveCarpeta = grado + grupoLetra;
+            alumnoSelect.disabled = false;
+
+            if (typeof baseDatosAlumnos !== 'undefined' && baseDatosAlumnos[claveCarpeta]) {
+                const archivos = baseDatosAlumnos[claveCarpeta];
+
+                if (archivos.length === 0) {
+                    alumnoSelect.innerHTML = '<option value="">Sin credenciales registradas</option>';
+                    alumnoSelect.disabled = true;
+                    return;
+                }
+
+                archivos.forEach(archivo => {
+                    let nombreLimpio = archivo.replace(/\.[^/.]+$/, ""); 
+
+                    const option = document.createElement('option');
+                    option.value = `fotos/${claveCarpeta}/${archivo}`;
+                    option.textContent = nombreLimpio;
+                    alumnoSelect.appendChild(option);
+                });
+            } else {
+                alumnoSelect.innerHTML = '<option value="">Carpeta no encontrada o vacía</option>';
+                alumnoSelect.disabled = true;
+            }
+        }
+
+        function mostrarCredencial() {
+            const alumnoSelect = document.getElementById('alumnoSelect');
+            const contenedor = document.getElementById('contenedorResultado');
+            const rutaFoto = alumnoSelect.value;
+
+            if (rutaFoto === "") {
+                contenedor.innerHTML = '<p class="placeholder">Selecciona el grado, grupo y alumno para visualizar su credencial.</p>';
+            } else {
+                contenedor.innerHTML = `
+                    <div class="image-shield-container" oncontextmenu="return false;">
+                        <div class="image-shield-overlay" oncontextmenu="return false;"></div>
+                        <img src="${rutaFoto}" class="credencial-img" alt="Credencial del alumno" ondragstart="return false;">
+                    </div>
+                `;
+            }
+        }
+    </script>
+
+</body>
+</html>
