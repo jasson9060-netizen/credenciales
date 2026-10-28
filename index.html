@@ -4,8 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visor de Credenciales - Studio Vivencia</title>
+    
+    <!-- LOGOTIPO Y MINIATURA PARA WHATSAPP / REDES SOCIALES -->
+    <meta property="og:title" content="Visor de Credenciales - Studio Vivencia">
+    <meta property="og:description" content="Sistema seguro de verificación de credenciales escolares.">
+    <meta property="og:image" content="https://studiovivencia.github.io/credenciales/logo.png">
+    <meta property="og:url" content="https://studiovivencia.github.io/credenciales/">
+    <meta property="og:type" content="website">
+
     <!-- Logotipo en la pestaña del navegador (Favicon) -->
     <link rel="icon" type="image/png" href="logo.png">
+    
     <style>
         * { 
             box-sizing: border-box; 
@@ -304,15 +313,15 @@
             </select>
         </div>
 
-        <!-- 2. Selección de Grupo (Una sola letra para coincidir con 1A, 1B, etc.) -->
+        <!-- 2. Selección de Grupo (Doble letra para carpetas AA, BB, CC, DD) -->
         <div class="form-group">
             <label for="grupoSelect">Grupo:</label>
             <select id="grupoSelect" onchange="cargarAlumnos()" disabled>
                 <option value="">-- Primero elija el grado --</option>
-                <option value="A">Grupo A</option>
-                <option value="B">Grupo B</option>
-                <option value="C">Grupo C</option>
-                <option value="D">Grupo D</option>
+                <option value="AA">Grupo A</option>
+                <option value="BB">Grupo B</option>
+                <option value="CC">Grupo C</option>
+                <option value="DD">Grupo D</option>
             </select>
         </div>
 
@@ -397,7 +406,7 @@
 
         function cargarAlumnos() {
             const grado = document.getElementById('gradoSelect').value;
-            const grupoLetra = document.getElementById('grupoSelect').value; // Esto tomará "A", "B", "C", "D"
+            const grupoLetra = document.getElementById('grupoSelect').value; // Toma "AA", "BB", etc.
             const alumnoSelect = document.getElementById('alumnoSelect');
             const contenedor = document.getElementById('contenedorResultado');
             
@@ -409,7 +418,7 @@
                 return;
             }
 
-            const claveCarpeta = grado + grupoLetra; // Ej: 1A, 2B, etc.
+            const claveCarpeta = grado + grupoLetra; // Ej: 1AA, 2BB, etc.
             alumnoSelect.disabled = false;
 
             if (typeof baseDatosAlumnos !== 'undefined' && baseDatosAlumnos[claveCarpeta]) {
@@ -425,7 +434,7 @@
                     let nombreLimpio = archivo.replace(/\.[^/.]+$/, ""); 
 
                     const option = document.createElement('option');
-                    // Apunta directo a la carpeta (ej: 1A/FRENTE_...)
+                    // Apunta a la carpeta doble (ej: 1AA/FRENTE_...)
                     option.value = `${claveCarpeta}/${archivo}`;
                     option.textContent = nombreLimpio;
                     alumnoSelect.appendChild(option);
